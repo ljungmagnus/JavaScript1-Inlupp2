@@ -12,6 +12,29 @@
 </head>
 <body>
     
+    
+    <form id="form" class="container my-5">
+      <div class="input-group">
+        <input id="newTodo" type="text" class="form-control" placeholder="Lägg till något att göra">
+        <button id="addTodo" class="btn btn-primary">Lägg till</button>
+        <div class="invalid-feedback">Error</div>
+      </div>
+    </form>
+
+    <div id="output" class="container">
+      <ul id="todoList" class="list-group">
+        
+        <!-- <li id="todo" class="list-group-item">
+          <input class="form-check-input me-1" type="checkbox" value="" aria-label="">
+          Att göra 1
+        </li> -->
+        
+      </ul>
+      <div class="d-grid col-3 mx-auto my-3">
+        <button id="removeTodo" class="btn btn-primary">Ta bort markerade!</button>
+      </div>
+
+    </div>
 
 
     <!-- JavaScript Bundle with Popper -->
