@@ -1,12 +1,14 @@
 const form = document.querySelector('#form');
 const input = document.querySelector('#newTodo');
-const output = document.querySelector('#todoList');
+const output = document.querySelector('#output');
 const button = document.querySelector('#removeTodo');
-
+const todosForm = document.querySelector('#todosForm');
+const notSelected = document.querySelector('#flexSwitchCheckChecked');
+const selected = document.querySelector('#flexSwitchCheckDefault');
 
 let todoList = [];
 
-// hämtar hem listan med todos från databasen 
+// hämtar hem listan med todos från databasen och sparar i todoList[]
 const fetchTodos =  async () => {
     const response = await fetch('https://jsonplaceholder.typicode.com/todos');
     const data = await response.json();
@@ -21,26 +23,79 @@ fetchTodos();
 const printTodos = () => {
     output.innerHTML = '';
     todoList.forEach(todo => {
-        output.innerHTML += `
-            <li class="list-group-item">
-                <input id="checkbox" class="form-check-input me-1" type="checkbox" value="" aria-label="">
-                ${todo.id} ${todo.title}
-            </li>
-        `;
+        output.innerHTML += createTodoListElement(todo);
     })
+} 
+
+const createTodoListElement = todo => {
+    let listElement = '';
+    
+    if(todo.completed) {
+        listElement = `
+        <div class="form-check form-switch my-3">
+            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
+            <label class="form-check-label" for="flexSwitchCheckChecked">${todo.id} ${todo.title}</label>
+        </div>
+        `;
+    }
+    else {
+        listElement = `
+        <div class="form-check form-switch my-3">
+            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+            <label class="form-check-label" for="flexSwitchCheckDefault">${todo.id} ${todo.title}</label>
+        </div>  
+        `;
+    }
+    
+    
+    return listElement;
 }
 
-// const createTodoListElement = (todo) => {
-//     output.innnerHTML = '';
-//     //forEach()    
-//         output.innerHTML += `
-//             <li id="todo" class="list-group-item">
-//                 <input class="form-check-input me-1" type="checkbox" value="" aria-label="">
-//                 ${todo.value}
-//             </li>
-//         `;
-// }
+todosForm.addEventListener('submit', e => {
+    e.preventDefault();
 
+    
+    removeCompletedTodos();
+       
+
+})
+
+const removeCompletedTodos = () => {
+   //The filter() method creates a new array filled with elements that pass a test provided by a function.
+    todoList = todoList.filter(todo => !todo.completed);
+    printTodos();
+
+
+    // DELETE from db
+    
+    deleteTodoFromDb(1);
+    
+    
+    // if()
+    // todo.remove()
+    
+}
+
+const deleteTodoFromDb = (id) => {
+    let url = 'https://jsonplaceholder.typicode.com/todos/'+id;
+    
+    fetch(url, {
+        method: 'DELETE',
+    })
+    .then(response => response.ok)
+    .then(data =>  {
+      if(data === true) {
+        // console.log('allt ok');
+        // console.log(data);
+        // todo.remove()
+        
+      }
+
+    })
+    .catch(err => console.log(err))
+
+    
+}
 
 // validera ny todo
 const validateText = (input) => {
@@ -101,11 +156,6 @@ form.addEventListener('submit', e => {
     
 })
 
-button.addEventListener('click', () => {
-    console.log('Klick');
-
-     
 
 
-}) 
 
